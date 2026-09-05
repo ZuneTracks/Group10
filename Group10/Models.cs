@@ -7,6 +7,8 @@ namespace Group10
         public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string DirectUserId { get; set; }
+        public bool IsDirect { get { return !string.IsNullOrWhiteSpace(DirectUserId); } }
         public string Initials
         {
             get
@@ -23,6 +25,8 @@ namespace Group10
     {
         public string Id { get; set; }
         public string GroupId { get; set; }
+        public string SenderId { get; set; }
+        public string RecipientId { get; set; }
         public string SenderName { get; set; }
         public string Text { get; set; }
         public DateTimeOffset CreatedAt { get; set; }

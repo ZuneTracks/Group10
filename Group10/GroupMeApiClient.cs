@@ -47,15 +47,19 @@ namespace Group10
             var messages = new List<ChatMessage>();
             foreach (var item in response.GetNamedObject("response").GetNamedArray("messages"))
             {
-                var value = item.GetObject();
-                messages.Add(new ChatMessage
-                {
-                    Id = value.GetNamedString("id"),
-                    GroupId = value.GetNamedString("group_id"),
-                    SenderName = value.GetNamedString("name", "Unknown"),
-                    Text = value.GetNamedString("text", string.Empty),
-                    CreatedAt = DateTimeOffset.FromUnixTimeSeconds((long)value.GetNamedNumber("created_at", 0))
-                });
+                messages.Add(CreateMessage(item.GetObject()));
+            }
+            return messages;
+        }
+
+        public async Task<IReadOnlyList<ChatMessage>> GetDirectMessagesAsync(string otherUserId)
+        {
+            var response = await GetAsync("direct_messages?other_user_id=" + Uri.EscapeDataString(otherUserId));
+            var payload = response.GetNamedObject("response", response);
+            var messages = new List<ChatMessage>();
+            foreach (var item in payload.GetNamedArray("direct_messages"))
+            {
+                messages.Add(CreateMessage(item.GetObject()));
             }
             return messages;
         }
@@ -72,6 +76,35 @@ namespace Group10
                 BaseAddress + "groups/" + Uri.EscapeDataString(groupId) + "/messages",
                 new StringContent(body.Stringify(), Encoding.UTF8, "application/json"));
             response.EnsureSuccessStatusCode();
+        }
+
+        public async Task SendDirectMessageAsync(string recipientId, string text)
+        {
+            var directMessage = new JsonObject
+            {
+                ["source_guid"] = JsonValue.CreateStringValue(Guid.NewGuid().ToString()),
+                ["recipient_id"] = JsonValue.CreateStringValue(recipientId),
+                ["text"] = JsonValue.CreateStringValue(text)
+            };
+            var body = new JsonObject { ["direct_message"] = directMessage };
+            var response = await client.PostAsync(
+                BaseAddress + "direct_messages",
+                new StringContent(body.Stringify(), Encoding.UTF8, "application/json"));
+            response.EnsureSuccessStatusCode();
+        }
+
+        private static ChatMessage CreateMessage(JsonObject value)
+        {
+            return new ChatMessage
+            {
+                Id = value.GetNamedString("id"),
+                GroupId = value.GetNamedString("group_id", string.Empty),
+                SenderId = value.GetNamedString("user_id", string.Empty),
+                RecipientId = value.GetNamedString("recipient_id", string.Empty),
+                SenderName = value.GetNamedString("name", "Unknown"),
+                Text = value.GetNamedString("text", string.Empty),
+                CreatedAt = DateTimeOffset.FromUnixTimeSeconds((long)value.GetNamedNumber("created_at", 0))
+            };
         }
 
         private async Task<JsonObject> GetAsync(string path)

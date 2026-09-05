@@ -69,7 +69,9 @@ namespace Group10
                     MessageReceived?.Invoke(this, new ChatMessage
                     {
                         Id = subject.GetNamedString("id"),
-                        GroupId = subject.GetNamedString("group_id"),
+                        GroupId = subject.GetNamedString("group_id", string.Empty),
+                        SenderId = subject.GetNamedString("user_id", string.Empty),
+                        RecipientId = subject.GetNamedString("recipient_id", string.Empty),
                         SenderName = subject.GetNamedString("name", "Unknown"),
                         Text = subject.GetNamedString("text", string.Empty),
                         CreatedAt = DateTimeOffset.FromUnixTimeSeconds((long)subject.GetNamedNumber("created_at", 0))

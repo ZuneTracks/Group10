@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Contacts;
 using Windows.Security.Authentication.Web;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -17,6 +18,7 @@ namespace Group10
         private readonly ObservableCollection<ChatMessage> messages = new ObservableCollection<ChatMessage>();
         private GroupMeApiClient api;
         private PushClient push;
+        private string currentUserId;
 
         public MainPage()
         {
@@ -72,6 +74,7 @@ namespace Group10
             {
                 api = new GroupMeApiClient(token);
                 var user = await api.GetCurrentUserAsync();
+                currentUserId = user.Id;
                 groups.Clear();
                 foreach (var group in await api.GetGroupsAsync()) groups.Add(group);
                 AuthenticationPane.Visibility = Visibility.Collapsed;
@@ -94,7 +97,10 @@ namespace Group10
             try
             {
                 messages.Clear();
-                foreach (var message in (await api.GetMessagesAsync(group.Id)).Reverse()) messages.Add(message);
+                var loadedMessages = group.IsDirect
+                    ? await api.GetDirectMessagesAsync(group.DirectUserId)
+                    : await api.GetMessagesAsync(group.Id);
+                foreach (var message in loadedMessages.Reverse()) messages.Add(message);
                 ConversationTitle.Text = group.Name;
                 SetStatus(group.Name);
             }
@@ -111,7 +117,14 @@ namespace Group10
             if (group == null || api == null || string.IsNullOrWhiteSpace(text)) return;
             try
             {
-                await api.SendMessageAsync(group.Id, text);
+                if (group.IsDirect)
+                {
+                    await api.SendDirectMessageAsync(group.DirectUserId, text);
+                }
+                else
+                {
+                    await api.SendMessageAsync(group.Id, text);
+                }
                 MessageBox.Text = string.Empty;
             }
             catch (HttpRequestException)
@@ -126,6 +139,7 @@ namespace Group10
             push = null;
             tokenStore.ClearToken();
             api = null;
+            currentUserId = null;
             groups.Clear();
             messages.Clear();
             ConversationTitle.Text = "Select a chat";
@@ -139,8 +153,77 @@ namespace Group10
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 var selected = GroupsList.SelectedItem as ChatGroup;
-                if (selected != null && selected.Id == message.GroupId) messages.Add(message);
+                if (selected == null) return;
+                if (!selected.IsDirect && selected.Id == message.GroupId)
+                {
+                    messages.Add(message);
+                    return;
+                }
+
+                var otherUserId = string.Equals(message.SenderId, currentUserId, StringComparison.Ordinal)
+                    ? message.RecipientId
+                    : message.SenderId;
+                if (selected.IsDirect && selected.DirectUserId == otherUserId) messages.Add(message);
             });
+        }
+
+        private void NewDirectMessageButton_Click(object sender, RoutedEventArgs e)
+        {
+            DirectUserIdBox.Text = string.Empty;
+            SelectedContactText.Text = "No phone contact selected";
+            DirectMessageStatusText.Text = string.Empty;
+            DirectMessagePane.Visibility = Visibility.Visible;
+        }
+
+        private async void ChooseContactButton_Click(object sender, RoutedEventArgs e)
+        {
+            var picker = new ContactPicker();
+            picker.DesiredFieldsWithContactFieldType.Add(ContactFieldType.PhoneNumber);
+            var contact = await picker.PickContactAsync();
+            if (contact != null)
+            {
+                SelectedContactText.Text = contact.DisplayName;
+            }
+        }
+
+        private void CancelDirectMessageButton_Click(object sender, RoutedEventArgs e)
+        {
+            DirectMessagePane.Visibility = Visibility.Collapsed;
+        }
+
+        private void StartDirectMessageButton_Click(object sender, RoutedEventArgs e)
+        {
+            var directUserId = DirectUserIdBox.Text.Trim();
+            if (string.IsNullOrWhiteSpace(directUserId))
+            {
+                SetStatus("Enter the contact's GroupMe user ID.");
+                return;
+            }
+
+            if (string.Equals(directUserId, currentUserId, StringComparison.Ordinal))
+            {
+                SetStatus("Choose another GroupMe user.");
+                return;
+            }
+
+            var contactName = SelectedContactText.Text == "No phone contact selected"
+                ? directUserId
+                : SelectedContactText.Text;
+            var conversation = groups.FirstOrDefault(item => item.DirectUserId == directUserId);
+            if (conversation == null)
+            {
+                conversation = new ChatGroup
+                {
+                    Id = "direct:" + directUserId,
+                    DirectUserId = directUserId,
+                    Name = contactName,
+                    Description = "Direct message"
+                };
+                groups.Insert(0, conversation);
+            }
+
+            DirectMessagePane.Visibility = Visibility.Collapsed;
+            GroupsList.SelectedItem = conversation;
         }
 
         private static bool TryGetToken(string responseData, out string token)
@@ -161,7 +244,11 @@ namespace Group10
 
         private void SetStatus(string message)
         {
-            if (AuthenticationPane.Visibility == Visibility.Visible)
+            if (DirectMessagePane.Visibility == Visibility.Visible)
+            {
+                DirectMessageStatusText.Text = message;
+            }
+            else if (AuthenticationPane.Visibility == Visibility.Visible)
             {
                 StatusText.Text = message;
             }
