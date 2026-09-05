@@ -152,6 +152,26 @@ namespace Group10
             }
         }
 
+        private async void LoadOlderMessagesButton_Click(object sender, RoutedEventArgs e)
+        {
+            var conversation = GroupsList.SelectedItem as ChatGroup;
+            if (conversation == null || api == null || messages.Count == 0) return;
+
+            try
+            {
+                var oldestMessageId = messages[0].Id;
+                var olderMessages = conversation.IsDirect
+                    ? await api.GetDirectMessagesAsync(conversation.DirectUserId, oldestMessageId)
+                    : await api.GetMessagesAsync(conversation.Id, oldestMessageId);
+                foreach (var message in olderMessages) messages.Insert(0, message);
+                SetStatus(olderMessages.Count == 0 ? "No older messages." : "Older messages loaded.");
+            }
+            catch (HttpRequestException)
+            {
+                SetStatus("Older messages could not be loaded.");
+            }
+        }
+
         private async void AddGroupMemberButton_Click(object sender, RoutedEventArgs e)
         {
             var group = GroupsList.SelectedItem as ChatGroup;

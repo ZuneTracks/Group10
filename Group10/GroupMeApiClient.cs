@@ -41,9 +41,11 @@ namespace Group10
             return groups;
         }
 
-        public async Task<IReadOnlyList<ChatMessage>> GetMessagesAsync(string groupId)
+        public async Task<IReadOnlyList<ChatMessage>> GetMessagesAsync(string groupId, string beforeMessageId = null)
         {
-            var response = await GetAsync("groups/" + Uri.EscapeDataString(groupId) + "/messages?limit=100");
+            var path = "groups/" + Uri.EscapeDataString(groupId) + "/messages?limit=100";
+            if (!string.IsNullOrWhiteSpace(beforeMessageId)) path += "&before_id=" + Uri.EscapeDataString(beforeMessageId);
+            var response = await GetAsync(path);
             var messages = new List<ChatMessage>();
             foreach (var item in response.GetNamedObject("response").GetNamedArray("messages"))
             {
@@ -52,9 +54,11 @@ namespace Group10
             return messages;
         }
 
-        public async Task<IReadOnlyList<ChatMessage>> GetDirectMessagesAsync(string otherUserId)
+        public async Task<IReadOnlyList<ChatMessage>> GetDirectMessagesAsync(string otherUserId, string beforeMessageId = null)
         {
-            var response = await GetAsync("direct_messages?other_user_id=" + Uri.EscapeDataString(otherUserId));
+            var path = "direct_messages?other_user_id=" + Uri.EscapeDataString(otherUserId);
+            if (!string.IsNullOrWhiteSpace(beforeMessageId)) path += "&before_id=" + Uri.EscapeDataString(beforeMessageId);
+            var response = await GetAsync(path);
             var payload = response.GetNamedObject("response", response);
             var messages = new List<ChatMessage>();
             foreach (var item in payload.GetNamedArray("direct_messages"))
