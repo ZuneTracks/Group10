@@ -78,6 +78,28 @@ namespace Group10
             response.EnsureSuccessStatusCode();
         }
 
+        public async Task<ChatGroup> CreateGroupAsync(string name, string description, bool createShareLink)
+        {
+            var body = new JsonObject
+            {
+                ["name"] = JsonValue.CreateStringValue(name),
+                ["description"] = JsonValue.CreateStringValue(description),
+                ["share"] = JsonValue.CreateBooleanValue(createShareLink)
+            };
+            var response = await client.PostAsync(
+                BaseAddress + "groups",
+                new StringContent(body.Stringify(), Encoding.UTF8, "application/json"));
+            response.EnsureSuccessStatusCode();
+            var payload = JsonObject.Parse(await response.Content.ReadAsStringAsync());
+            var group = payload.GetNamedObject("response", payload);
+            return new ChatGroup
+            {
+                Id = group.GetNamedString("id"),
+                Name = group.GetNamedString("name"),
+                Description = group.GetNamedString("description", string.Empty)
+            };
+        }
+
         public async Task SendDirectMessageAsync(string recipientId, string text)
         {
             var directMessage = new JsonObject

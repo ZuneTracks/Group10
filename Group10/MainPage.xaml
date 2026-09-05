@@ -15,6 +15,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" Margin="16,0" VerticalAlignment="Center">
                     <Border Width="30" Height="30" CornerRadius="15" Background="White" Margin="0,0,10,0">
@@ -22,10 +23,13 @@
                     </Border>
                     <TextBlock Text="Group10" Foreground="White" FontSize="21" FontWeight="SemiBold" VerticalAlignment="Center" />
                 </StackPanel>
-                <Button x:Name="NewDirectMessageButton" Grid.Column="1" Style="{StaticResource CommandGlyphButtonStyle}" Click="NewDirectMessageButton_Click">
+                <Button x:Name="NewGroupButton" Grid.Column="1" Style="{StaticResource CommandGlyphButtonStyle}" Click="NewGroupButton_Click">
+                    <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" FontSize="18" />
+                </Button>
+                <Button x:Name="NewDirectMessageButton" Grid.Column="2" Style="{StaticResource CommandGlyphButtonStyle}" Click="NewDirectMessageButton_Click">
                     <TextBlock Text="&#xE8FA;" FontFamily="Segoe MDL2 Assets" FontSize="18" />
                 </Button>
-                <Button x:Name="SignOutButton" Grid.Column="2" Style="{StaticResource CommandGlyphButtonStyle}" Click="SignOutButton_Click">
+                <Button x:Name="SignOutButton" Grid.Column="3" Style="{StaticResource CommandGlyphButtonStyle}" Click="SignOutButton_Click">
                     <TextBlock Text="&#xE8AC;" FontFamily="Segoe MDL2 Assets" FontSize="18" />
                 </Button>
             </Grid>
@@ -132,6 +136,23 @@
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Content="CANCEL" Click="CancelDirectMessageButton_Click" />
                         <Button Content="START CHAT" Background="{StaticResource Group10BlueBrush}" Foreground="White" Margin="8,0,0,0" Click="StartDirectMessageButton_Click" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid x:Name="CreateGroupPane" Visibility="Collapsed" Background="#B2000000" Padding="24">
+            <Border Background="White" CornerRadius="8" Padding="20" MaxWidth="360" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel>
+                    <TextBlock Text="Create a group" Foreground="#1E2D35" FontSize="22" FontWeight="SemiBold" />
+                    <TextBlock Text="Start a new GroupMe conversation." Foreground="#657681" FontSize="13" Margin="0,8,0,16" />
+                    <TextBox x:Name="GroupNameBox" PlaceholderText="Group name" />
+                    <TextBox x:Name="GroupDescriptionBox" PlaceholderText="Description (optional)" Margin="0,8,0,0" />
+                    <ToggleSwitch x:Name="GroupShareToggle" Header="Create a share link" Margin="0,12,0,12" />
+                    <TextBlock x:Name="CreateGroupStatusText" Foreground="#B33A3A" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,10" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="CANCEL" Click="CancelCreateGroupButton_Click" />
+                        <Button Content="CREATE" Background="{StaticResource Group10BlueBrush}" Foreground="White" Margin="8,0,0,0" Click="CreateGroupButton_Click" />
                     </StackPanel>
                 </StackPanel>
             </Border>

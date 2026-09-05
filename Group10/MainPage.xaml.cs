@@ -175,6 +175,15 @@ namespace Group10
             DirectMessagePane.Visibility = Visibility.Visible;
         }
 
+        private void NewGroupButton_Click(object sender, RoutedEventArgs e)
+        {
+            GroupNameBox.Text = string.Empty;
+            GroupDescriptionBox.Text = string.Empty;
+            GroupShareToggle.IsOn = false;
+            CreateGroupStatusText.Text = string.Empty;
+            CreateGroupPane.Visibility = Visibility.Visible;
+        }
+
         private async void ChooseContactButton_Click(object sender, RoutedEventArgs e)
         {
             var picker = new ContactPicker();
@@ -189,6 +198,33 @@ namespace Group10
         private void CancelDirectMessageButton_Click(object sender, RoutedEventArgs e)
         {
             DirectMessagePane.Visibility = Visibility.Collapsed;
+        }
+
+        private void CancelCreateGroupButton_Click(object sender, RoutedEventArgs e)
+        {
+            CreateGroupPane.Visibility = Visibility.Collapsed;
+        }
+
+        private async void CreateGroupButton_Click(object sender, RoutedEventArgs e)
+        {
+            var name = GroupNameBox.Text.Trim();
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                SetStatus("Enter a group name.");
+                return;
+            }
+
+            try
+            {
+                var group = await api.CreateGroupAsync(name, GroupDescriptionBox.Text.Trim(), GroupShareToggle.IsOn);
+                groups.Insert(0, group);
+                CreateGroupPane.Visibility = Visibility.Collapsed;
+                GroupsList.SelectedItem = group;
+            }
+            catch (HttpRequestException)
+            {
+                SetStatus("The group could not be created.");
+            }
         }
 
         private void StartDirectMessageButton_Click(object sender, RoutedEventArgs e)
@@ -244,7 +280,11 @@ namespace Group10
 
         private void SetStatus(string message)
         {
-            if (DirectMessagePane.Visibility == Visibility.Visible)
+            if (CreateGroupPane.Visibility == Visibility.Visible)
+            {
+                CreateGroupStatusText.Text = message;
+            }
+            else if (DirectMessagePane.Visibility == Visibility.Visible)
             {
                 DirectMessageStatusText.Text = message;
             }
