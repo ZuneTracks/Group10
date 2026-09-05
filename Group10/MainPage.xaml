@@ -69,9 +69,14 @@
                         <RowDefinition Height="48" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <Border Background="White" BorderBrush="{StaticResource Group10DividerBrush}" BorderThickness="0,0,0,1">
+                    <Grid Background="White" BorderBrush="{StaticResource Group10DividerBrush}" BorderThickness="0,0,0,1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
                         <TextBlock x:Name="ConversationTitle" Text="Select a chat" Margin="16,0" Foreground="#1E2D35" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                    </Border>
+                        <Button Grid.Column="1" Content="ADD" Foreground="{StaticResource Group10DarkBlueBrush}" FontSize="11" FontWeight="SemiBold" Margin="0,0,8,0" Click="AddGroupMemberButton_Click" />
+                    </Grid>
                     <ListView x:Name="MessagesList" Grid.Row="1" Margin="12,10" BorderThickness="0" Background="Transparent" Padding="0" IsItemClickEnabled="False">
                         <ListView.ItemTemplate>
                             <DataTemplate>

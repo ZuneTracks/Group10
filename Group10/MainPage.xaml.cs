@@ -152,6 +152,36 @@ namespace Group10
             }
         }
 
+        private async void AddGroupMemberButton_Click(object sender, RoutedEventArgs e)
+        {
+            var group = GroupsList.SelectedItem as ChatGroup;
+            if (group == null || group.IsDirect || api == null)
+            {
+                SetStatus("Select a group before inviting a contact.");
+                return;
+            }
+
+            var picker = new ContactPicker();
+            picker.DesiredFieldsWithContactFieldType.Add(ContactFieldType.PhoneNumber);
+            var contact = await picker.PickContactAsync();
+            var phone = contact == null ? null : contact.Phones.FirstOrDefault();
+            if (phone == null || string.IsNullOrWhiteSpace(phone.Number))
+            {
+                if (contact != null) SetStatus("The selected contact has no phone number.");
+                return;
+            }
+
+            try
+            {
+                await api.AddMemberByPhoneAsync(group.Id, contact.DisplayName, phone.Number);
+                SetStatus("Invitation sent to " + contact.DisplayName + ".");
+            }
+            catch (HttpRequestException)
+            {
+                SetStatus("The contact could not be invited.");
+            }
+        }
+
         private void SignOutButton_Click(object sender, RoutedEventArgs e)
         {
             if (push != null) push.Dispose();

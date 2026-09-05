@@ -123,6 +123,23 @@ namespace Group10
             response.EnsureSuccessStatusCode();
         }
 
+        public async Task AddMemberByPhoneAsync(string groupId, string nickname, string phoneNumber)
+        {
+            var member = new JsonObject
+            {
+                ["nickname"] = JsonValue.CreateStringValue(nickname),
+                ["phone_number"] = JsonValue.CreateStringValue(phoneNumber),
+                ["guid"] = JsonValue.CreateStringValue(Guid.NewGuid().ToString())
+            };
+            var members = new JsonArray();
+            members.Add(member);
+            var body = new JsonObject { ["members"] = members };
+            var response = await client.PostAsync(
+                BaseAddress + "groups/" + Uri.EscapeDataString(groupId) + "/members/add",
+                new StringContent(body.Stringify(), Encoding.UTF8, "application/json"));
+            response.EnsureSuccessStatusCode();
+        }
+
         private static ChatMessage CreateMessage(JsonObject value)
         {
             return new ChatMessage
