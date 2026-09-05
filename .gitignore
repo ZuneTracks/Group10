@@ -1,0 +1,6 @@
+.vs/
+bin/
+obj/
+AppPackages/
+*.csproj.user
+*.pfx

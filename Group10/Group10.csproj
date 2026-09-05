@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">ARM</Platform>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <ProjectGuid>{2F836A5A-413A-469F-82EE-A0387C6FC9DD}</ProjectGuid>
+    <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>AppContainerExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Group10</RootNamespace>
+    <AssemblyName>Group10</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion>10.0.15063.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
+    <TargetFrameworkIdentifier>.NETCore</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <AppContainerApplication>true</AppContainerApplication>
+    <ApplicationType>Windows Store</ApplicationType>
+    <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
+    <Platforms>ARM</Platforms>
+    <PlatformTarget>ARM</PlatformTarget>
+    <AppxPackage>true</AppxPackage>
+    <AppxBundle>Never</AppxBundle>
+    <AppxBundlePlatforms>ARM</AppxBundlePlatforms>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <PackageCertificateKeyFile>Group10_DevelopmentKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>50A69FDCF2A04E0A1D0873D332775307E30B10A8</PackageCertificateThumbprint>
+    <RuntimeIdentifiers>win10;win10-arm</RuntimeIdentifiers>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <PlatformTarget>ARM</PlatformTarget>
+    <RuntimeIdentifier>win10-arm</RuntimeIdentifier>
+    <OutputPath>bin\ARM\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UAP</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <PlatformTarget>ARM</PlatformTarget>
+    <RuntimeIdentifier>win10-arm</RuntimeIdentifier>
+    <OutputPath>bin\ARM\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UAP</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.14" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+    <Content Include="Assets\SplashScreen.scale-200.png" />
+    <Content Include="Assets\Square150x150Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs" />
+    <Compile Include="ClientConfiguration.cs" />
+    <Compile Include="GroupMeApiClient.cs" />
+    <Compile Include="MainPage.xaml.cs" />
+    <Compile Include="Models.cs" />
+    <Compile Include="PushClient.cs" />
+    <Compile Include="TokenStore.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <ApplicationDefinition Include="App.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></ApplicationDefinition>
+    <Page Include="MainPage.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+</Project>

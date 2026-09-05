@@ -1,0 +1,20 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.37530.8
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Group10", "Group10\Group10.csproj", "{2F836A5A-413A-469F-82EE-A0387C6FC9DD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Release|ARM = Release|ARM
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2F836A5A-413A-469F-82EE-A0387C6FC9DD}.Debug|ARM.ActiveCfg = Debug|ARM
+		{2F836A5A-413A-469F-82EE-A0387C6FC9DD}.Debug|ARM.Build.0 = Debug|ARM
+		{2F836A5A-413A-469F-82EE-A0387C6FC9DD}.Debug|ARM.Deploy.0 = Debug|ARM
+		{2F836A5A-413A-469F-82EE-A0387C6FC9DD}.Release|ARM.ActiveCfg = Release|ARM
+		{2F836A5A-413A-469F-82EE-A0387C6FC9DD}.Release|ARM.Build.0 = Release|ARM
+		{2F836A5A-413A-469F-82EE-A0387C6FC9DD}.Release|ARM.Deploy.0 = Release|ARM
+	EndGlobalSection
+EndGlobal

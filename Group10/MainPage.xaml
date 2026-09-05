@@ -1,0 +1,118 @@
+<Page
+    x:Class="Group10.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Background="{StaticResource Group10CanvasBrush}">
+    <Grid>
+        <Grid x:Name="AppShell" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="56" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Background="{StaticResource Group10BlueBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Margin="16,0" VerticalAlignment="Center">
+                    <Border Width="30" Height="30" CornerRadius="15" Background="White" Margin="0,0,10,0">
+                        <TextBlock Text="#" Foreground="{StaticResource Group10BlueBrush}" FontSize="22" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <TextBlock Text="Group10" Foreground="White" FontSize="21" FontWeight="SemiBold" VerticalAlignment="Center" />
+                </StackPanel>
+                <Button x:Name="SignOutButton" Grid.Column="1" Style="{StaticResource CommandGlyphButtonStyle}" Click="SignOutButton_Click">
+                    <TextBlock Text="&#xE8AC;" FontFamily="Segoe MDL2 Assets" FontSize="18" />
+                </Button>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="148" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid Background="White" BorderBrush="{StaticResource Group10DividerBrush}" BorderThickness="0,0,1,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="48" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="CHATS" Margin="14,0" Foreground="#657681" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    <ListView x:Name="GroupsList" Grid.Row="1" SelectionChanged="GroupsList_SelectionChanged" BorderThickness="0" Background="Transparent" Padding="0">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="10,7">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="38" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Width="34" Height="34" CornerRadius="17" Background="{StaticResource Group10BlueBrush}" VerticalAlignment="Top">
+                                        <TextBlock Text="{Binding Initials}" Foreground="White" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                        <TextBlock Text="{Binding Name}" Foreground="#1E2D35" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Text="{Binding Description}" Foreground="#71808A" FontSize="12" TextTrimming="CharacterEllipsis" MaxLines="1" />
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="48" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Border Background="White" BorderBrush="{StaticResource Group10DividerBrush}" BorderThickness="0,0,0,1">
+                        <TextBlock x:Name="ConversationTitle" Text="Select a chat" Margin="16,0" Foreground="#1E2D35" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                    </Border>
+                    <ListView x:Name="MessagesList" Grid.Row="1" Margin="12,10" BorderThickness="0" Background="Transparent" Padding="0" IsItemClickEnabled="False">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,0,0,12">
+                                    <StackPanel Orientation="Horizontal" Margin="4,0,4,3">
+                                        <TextBlock Text="{Binding SenderName}" Foreground="{StaticResource Group10DarkBlueBrush}" FontSize="13" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Text="{Binding ShortTimestamp}" Foreground="#7D8B94" FontSize="11" Margin="8,2,0,0" />
+                                    </StackPanel>
+                                    <Border Background="White" BorderBrush="{StaticResource Group10DividerBrush}" BorderThickness="1" CornerRadius="8" Padding="10,7">
+                                        <TextBlock Text="{Binding Text}" Foreground="#26343B" TextWrapping="WrapWholeWords" />
+                                    </Border>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="2" Background="White" BorderBrush="{StaticResource Group10DividerBrush}" BorderThickness="0,1,0,0" Padding="12,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="MessageBox" PlaceholderText="Write a message" VerticalAlignment="Center" />
+                <Button Grid.Column="1" Margin="8,0,0,0" Background="{StaticResource Group10BlueBrush}" Foreground="White" Content="SEND" FontWeight="SemiBold" Click="SendButton_Click" />
+                <TextBlock x:Name="ConversationStatusText" Grid.ColumnSpan="2" Margin="4,42,4,0" Foreground="#657681" FontSize="11" TextTrimming="CharacterEllipsis" />
+            </Grid>
+        </Grid>
+
+        <Grid x:Name="AuthenticationPane" Background="{StaticResource Group10BlueBrush}" Padding="28">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="1" MaxWidth="360">
+                <Border Width="88" Height="88" CornerRadius="44" Background="White" HorizontalAlignment="Center">
+                    <TextBlock Text="#" Foreground="{StaticResource Group10BlueBrush}" FontSize="58" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+                <TextBlock Text="Welcome to Group10" Foreground="White" FontSize="28" FontWeight="SemiBold" TextAlignment="Center" Margin="0,22,0,8" />
+                <TextBlock Text="Your groups and messages stay connected wherever you use Group10." Foreground="#DDEFFC" FontSize="15" TextAlignment="Center" TextWrapping="Wrap" />
+                <Border Background="#1670A6" CornerRadius="6" Padding="16" Margin="0,28,0,18">
+                    <StackPanel>
+                        <TextBlock Text="Sign in securely" Foreground="White" FontWeight="SemiBold" FontSize="16" />
+                        <TextBlock Text="Group10 opens GroupMe's secure authorization page only to verify your account. Your password is never entered into or stored by Group10." Foreground="#DDEFFC" FontSize="13" TextWrapping="Wrap" Margin="0,6,0,0" />
+                    </StackPanel>
+                </Border>
+                <Button x:Name="SignInButton" Content="CONTINUE WITH GROUPME" Background="White" Foreground="{StaticResource Group10DarkBlueBrush}" FontWeight="SemiBold" Height="46" Click="SignInButton_Click" />
+                <TextBlock x:Name="StatusText" Foreground="White" FontSize="12" TextAlignment="Center" TextWrapping="Wrap" Margin="12,14,12,0" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>
