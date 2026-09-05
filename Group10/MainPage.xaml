@@ -83,6 +83,7 @@
                                     <Border Background="White" BorderBrush="{StaticResource Group10DividerBrush}" BorderThickness="1" CornerRadius="8" Padding="10,7">
                                         <TextBlock Text="{Binding Text}" Foreground="#26343B" TextWrapping="WrapWholeWords" />
                                     </Border>
+                                    <Button Content="LIKE" Tag="{Binding}" Foreground="{StaticResource Group10DarkBlueBrush}" FontSize="11" HorizontalAlignment="Left" Margin="2,4,0,0" Padding="4,0" Click="LikeMessageButton_Click" />
                                 </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>

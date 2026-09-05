@@ -133,6 +133,25 @@ namespace Group10
             }
         }
 
+        private async void LikeMessageButton_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var message = button == null ? null : button.Tag as ChatMessage;
+            var group = GroupsList.SelectedItem as ChatGroup;
+            if (message == null || group == null || group.IsDirect || api == null) return;
+
+            try
+            {
+                await api.LikeMessageAsync(group.Id, message.Id);
+                button.IsEnabled = false;
+                button.Content = "LIKED";
+            }
+            catch (HttpRequestException)
+            {
+                SetStatus("The message could not be liked.");
+            }
+        }
+
         private void SignOutButton_Click(object sender, RoutedEventArgs e)
         {
             if (push != null) push.Dispose();

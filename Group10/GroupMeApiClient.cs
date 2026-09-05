@@ -115,6 +115,14 @@ namespace Group10
             response.EnsureSuccessStatusCode();
         }
 
+        public async Task LikeMessageAsync(string conversationId, string messageId)
+        {
+            var response = await client.PostAsync(
+                BaseAddress + "messages/" + Uri.EscapeDataString(conversationId) + "/" + Uri.EscapeDataString(messageId) + "/like",
+                new StringContent(string.Empty));
+            response.EnsureSuccessStatusCode();
+        }
+
         private static ChatMessage CreateMessage(JsonObject value)
         {
             return new ChatMessage
